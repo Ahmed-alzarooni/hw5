@@ -8,11 +8,12 @@ execute:
   freeze: true
   cache: true
 format:
-  #html: # comment this line to get pdf
-   pdf: 
+  html: # comment this line to get pdf
+  # pdf: 
     fig-width: 7
     fig-height: 7
 ---
+
 
 
 ---
@@ -32,6 +33,7 @@ Please read the instructions carefully before submitting your assignment.
 In this assignment, we will explore decision trees, support vector machines and neural networks for classification and regression. The assignment is designed to test your ability to fit and analyze these models with different configurations and compare their performance.
 
 We will need the following packages:
+
 
 
 ```{R, message=FALSE, warning=FALSE, results='hide'}
@@ -56,7 +58,9 @@ packages <- c(
 sapply(packages,library, character.only=T)
 ```
 
+
 <br><br><br><br>
+
 ---
 
 ## Question 1
@@ -88,9 +92,11 @@ df <- df %>%
 
 ---
 
+
 ###### 1.2 (2.5 points)
 
 Visualize the correlation matrix of all numeric columns in `df` using `corrplot()`
+
 
 ```{R}
 df %>% 
@@ -100,11 +106,13 @@ df %>%
   corrplot(diag=F)
 ```
 
+
 ---
 
 ###### 1.3 (5 points)
 
 Split the data `df` into `df_train` and `df_split` using `test_ind` in the code below:
+
 
 ```{R}
 set.seed(42)
@@ -117,6 +125,7 @@ test_ind <- sample(
 df_train <- df[-test_ind, ]
 df_test <- df[test_ind, ]
 ```
+
 
 ---
 
@@ -135,16 +144,19 @@ Fit a linear regression model to predict the `median_house_value` :
 
 Interpret the coefficients and summarize your results. 
 
+
 ```{R}
 lm_fit <- lm(median_house_value ~ ., df_train)
 summary(lm_fit)
 ```
+
 
 ---
 
 ###### 1.5 (5 points)
 
 Complete the `rmse` function for computing the Root Mean-Squared Error between the true `y` and the predicted `yhat`, and use it to compute the RMSE for the regression model on `df_test`
+
 
 ```{R}
 rmse <- function(y, yhat) {
@@ -161,9 +173,11 @@ rmse(
 ```
 
 
+
 ###### 1.6 (5 points)
 
 Fit a decision tree model to predict the `median_house_value` using the same predictors as in 1.4. Use the `rpart()` function.
+
 
 ```{R}
 rpart_fit <- rpart(median_house_value ~ ., df_train)
@@ -171,14 +185,18 @@ rpart_fit <- rpart(median_house_value ~ ., df_train)
 ```
 
 
+
 Visualize the decision tree using the `rpart.plot()` function. 
+
 
 ```{R}
 rpart.plot(rpart_fit)
 ```
 
 
+
 Report the root mean squared error on the test set.
+
 
 ```{R}
 rpart_predictions <- predict(rpart_fit, df_test)
@@ -189,11 +207,13 @@ rmse(
 )
 ```
 
+
 ---
 
 ###### 1.7 (5 points)
 
 Fit a support vector machine model to predict the `median_house_value` using the same predictors as in 1.4. Use the `svm()` function and use any kernel of your choice. Report the root mean squared error on the test set.
+
 
 ```{R}
 svm_fit <- svm(median_house_value ~ ., df_train, kernel="radial")
@@ -206,11 +226,13 @@ rmse(
 )
 ```
 
+
 ---
 
 ###### 1.8 (25 points)
 
 Initialize a neural network model architecture:
+
 
 ```{R}
 NNet <- nn_module(
@@ -231,7 +253,9 @@ NNet <- nn_module(
 ```
 
 
+
 Fit a neural network model to predict the `median_house_value` using the same predictors as in 1.4. Use the `model.matrix` function to create the covariate matrix and `luz` package for fitting the network with $32, 16, 8$ nodes in each of the three hidden layers. 
+
 
 ```{R, cache = TRUE}
 M <- model.matrix(median_house_value ~ 0 + ., df)
@@ -260,14 +284,18 @@ fit_nn <- NNet %>%
   )
 ```
 
+
 Plot the results of the training and validation loss and accuracy.
+
 
 ```{R}
 plot(fit_nn)
 ```
 
 
+
 Report the root mean squared error on the test set.
+
 
 
 ```{R}
@@ -283,6 +311,7 @@ rmse(
 
 ```
 
+
 ::: {.callout-warning}
 Remember to use the `as_array()` function to convert the predictions to a vector of numbers before computing the RMSE with `rmse()`
 :::
@@ -292,6 +321,7 @@ Remember to use the `as_array()` function to convert the predictions to a vector
 ###### 1.9 (5 points)
 
 Summarize your results in a table comparing the RMSE for the different models. Which model performed best? Why do you think that is?
+
 
 ```{R}
 predictions <- sapply(
@@ -315,8 +345,10 @@ predictions %>%
 
 
 
+
 <br><br><br><br>
 <br><br><br><br>
+
 ---
 
 ## Question 2
@@ -329,6 +361,7 @@ The `data` folder contains the `spam.csv` dataset. This dataset contains feature
 
 ---
 
+
 ###### 2.1 (2.5 points)
 
 Read the data file as a tibble in R. Preprocess the data such that:
@@ -336,6 +369,7 @@ Read the data file as a tibble in R. Preprocess the data such that:
 1. the variables are of the right data type, e.g., categorical variables are encoded as factors
 2. all column names to lower case for consistency
 3. Any observations with missing values are dropped
+
 
 ```{R}
 filename <- "data/spambase.csv"
@@ -346,11 +380,13 @@ df <- df %>%
   drop_na()
 ```
 
+
 ---
 
 ###### 2.2 (2.5 points)
 
 Split the data `df` into `df_train` and `df_split` using `test_ind` in the code below:
+
 
 ```{R}
 set.seed(42)
@@ -364,7 +400,9 @@ df_train <- df[-test_ind, ]
 df_test  <- df[test_ind, ]
 ```
 
+
 Complete the `overview` function which returns a data frame with the following columns: `accuracy`, `error`, `false positive rate`, `true positive rate`, between the true `true_class` and the predicted `pred_class` for any classification model.
+
 
 ```{R}
 overview <- function(pred_class, true_class) {
@@ -389,20 +427,24 @@ overview <- function(pred_class, true_class) {
 ```
 
 
+
 ---
 
 ###### 2.3 (5 points)
 
 Fit a logistic regression model to predict the `spam` variable using the remaining predictors. Report the prediction accuracy on the test set.
 
+
 ```{R}
 glm_fit <- glm(spam ~ ., df_train, family=binomial())
 glm_classes <- levels(df_train$spam)
 ```
+
 ```{R}
 glm_predictions <- predict(glm_fit, df_test, type="response") > 0.5
 overview(df_test$spam, glm_predictions)
 ```
+
 
 ---
 
@@ -410,24 +452,30 @@ overview(df_test$spam, glm_predictions)
 
 Fit a decision tree model to predict the `spam` variable using the remaining predictors. Use the `rpart()` function and set the `method` argument to `"class"`. 
 
+
 ```{R}
 rpart_classes <- rpart(spam ~ ., df_train, method="class")
 
 ```
 
+
 Visualize the decision tree using the `rpart.plot()` function. 
+
 
 ```{R}
 rpart.plot(rpart_fit)
 ```
 
+
 Report the prediction accuracy on the test set.
+
 
 ```{R}
 rpart_predictions <- predict(rpart_fit, df_test) 
 
 overview(df_test$spam, rpart_classes)
 ```
+
 
 ---
 
@@ -436,16 +484,20 @@ overview(df_test$spam, rpart_classes)
 Fit a support vector machine model to predict the `spam` variable using the remaining predictors. Use the `svm()` function and use any kernel of your choice. Remember to set the `type` argument to `"C-classification"` **if you haven't** already converted `spam` to be of type `factor`.
 
 
+
 ```{R}
 svm_fit <- svm(spam ~ ., df_train, kernel="radial", type="C-classification")
 ```
+
 Report the prediction accuracy on the test set.
+
 
 ```{R}
 svm_classes <- predict(svm_fit, df_test) == "1"
 
 overview(df_test$spam, svm_predictions)
 ```
+
 
 ---
 
@@ -460,6 +512,7 @@ Note that the neural network in **Q 1.9** was a regression model. You will need 
 :::
 
 Use the `model.matrix` function to create the covariate matrix and `luz` package for fitting the network with $32, 16, 8$ nodes in each of the three hidden layers. 
+
 
 ```{R}
 NNet <- nn_module(
@@ -480,11 +533,13 @@ NNet <- nn_module(
 )
 ```
 
+
 ---
 
 ###### 2.7 (5 points)
 
 Summarize your results in a table comparing the accuracy metrics for the different models. 
+
 
 ```{R}
 list(
@@ -499,12 +554,14 @@ list(
   knitr::kable()
 ```
 
+
 If you were to choose a model to classify spam emails, which model would you choose? Think about the context of the problem and the cost of false positives and false negatives.
 
 
 
 <br><br><br><br>
 <br><br><br><br>
+
 ---
 
 ## Question 3
@@ -552,9 +609,11 @@ generate_three_spirals <- function(){
 
 ---
 
+
 ###### 3.1 (5 points)
 
 Generate the three spirals dataset using the code above. Plot $x_1$ vs $x_2$ and use the `y` variable to color the points. 
+
 
 
 ```{R}
@@ -567,7 +626,9 @@ plot(
 )
 ```
 
+
 Define a grid of $100$ points from $-10$ to $10$ in both $x_1$ and $x_2$ using the `expand.grid()`. Save it as a tibble called `df_test`. 
+
 
 ```{R}
 grid <- expand.grid(
@@ -577,18 +638,22 @@ grid <- expand.grid(
 df_test <- as_tibble(grid)
 ```
 
+
 ---
 
 ###### 3.2 (10 points)
 
 Fit a classification tree model to predict the `y` variable using the `x1` and `x2` predictors, and plot the decision boundary. 
 
+
 ```{R}
 rpart_fit <- rpart(y ~ ., df, method="class")
 rpart_classes <- predict(rpart_fit, df_test, type="class")
 ```
 
+
 Plot the decision boundary using the following function:
+
 
 ```{R}
 plot_decision_boundary <- function(predictions){
@@ -609,17 +674,20 @@ plot_decision_boundary <- function(predictions){
 plot_decision_boundary(rpart_classes)
 ```
 
+
 ---
 
 ###### 3.3 (10 points)
 
 Fit a support vector machine model to predict the `y` variable using the `x1` and `x2` predictors. Use the `svm()` function and use any kernel of your choice. Remember to set the `type` argument to `"C-classification"` **if you haven't** converted `y` to be of type `factor`.
 
+
 ```{R}
 svm_fit <- svm(y ~ ., df, kernel="radial", type="C-classification")
 svm_classes <- predict(svm_fit, df_test)
 plot_decision_boundary(svm_classes)
 ```
+
 
 ---
 
@@ -642,6 +710,7 @@ You can use any optimizer of your choice, but you **will need to tune the learni
 
 Fit a neural network with **1 hidden layer** to predict the `y` variable using the `x1` and `x2` predictors.
 
+
 ```{R}
 NN1 <- nn_module(
   initialize = function(p, q1, o){
@@ -657,6 +726,7 @@ NN1 <- nn_module(
   }
 )
 ```
+
 ```{R
 
 fit_1 <- NN1 %>% 
@@ -695,6 +765,7 @@ Plot the results using the `plot_decision_boundary()` function.
 
 Fit a neural network with **0 hidden layers** to predict the `y` variable using the `x1` and `x2` predictors.
 
+
 ```{R}
 NN0 <- nn_module(
   initialize = function(p, o){
@@ -706,6 +777,7 @@ NN0 <- nn_module(
   }
 )
 ```
+
 ```{R
 
 fit_0 <- NN0 %>% 
@@ -727,6 +799,7 @@ Plot the results using the `plot_decision_boundary()` function.
 ###### 3.6 (10 points)
 
 Fit a neural network with **3 hidden layers** to predict the `y` variable using the `x1` and `x2` predictors.
+
 
 ```{R}
 NN2 <- nn_module(
@@ -750,7 +823,9 @@ NN2 <- nn_module(
 )
 ```
 
+
 Plot the results using the `plot_decision_boundary()` function.
+
 
 ```{R}
 plot_decision_boundary(
@@ -759,6 +834,7 @@ plot_decision_boundary(
       as_array
 )
 ```
+
 
 ---
 
@@ -777,6 +853,7 @@ What are the differences between the models? How do the decision boundaries chan
 
 <br><br><br><br>
 <br><br><br><br>
+
 ---
 
 

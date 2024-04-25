@@ -1,2 +1,16 @@
 magrittr
 rpart
+tibble
+dplyr
+readr
+tidyr
+purrr
+broom
+corrplot
+ggplot2
+lattice
+caret
+rpart.plot
+e1071
+torch
+luz
